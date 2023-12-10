@@ -20,7 +20,7 @@ which works by embedding all tiles which enforces the 0.6 look but also embeds s
 
 
 So this tool does not emebed the tiles but moves the doodads around so they can be loaded as non embedded native 0.7 mapres and they look the same.
-Some things were changed so drastically that it looks a bit different for some things. And some doodads got removed. So this tool can be configured to enable
+Some things were changed so drastically that it looks a bit different after conversion. And some doodads got removed. So this tool can be configured to enable
 a lot of warnings and also fail on warnings. So if you want to do conversations without compromise you can throw this tool at the map first and enable the ``-Wall -Werror``
 flags and if it fails you can use ddnets [map_convert_07](https://github.com/ddnet/ddnet/blob/master/src/tools/map_convert_07.cpp) instead.
 

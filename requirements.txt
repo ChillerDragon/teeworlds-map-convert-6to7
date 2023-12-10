@@ -1,2 +1,1 @@
-numpy==1.26.2
-twmap==0.4.3
+-r requirements/base.txt

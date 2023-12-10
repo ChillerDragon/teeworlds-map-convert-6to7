@@ -1,26 +1,23 @@
 #!/usr/bin/env python
 
-import sys
 import os.path
 import json
+import argparse
 
 import numpy
-import argparse
-import twmap
+import twmap # type: ignore
 
-example_text = '''example:
+EXAMPLE_TEXT = '''example:
 
   6to7.py ~/.teeworlds/maps/dm1.map dm1_07.map'''
 all_args = argparse.ArgumentParser(
-                                 epilog=example_text,
+                                 epilog=EXAMPLE_TEXT,
                                  formatter_class=argparse.RawDescriptionHelpFormatter)
 all_args.add_argument('-v', '--verbose',  help='verbose output')
 all_args.add_argument('INPUT_MAP')
 all_args.add_argument('OUTPUT_MAP')
 
 args = vars(all_args.parse_args())
-
-m = twmap.Map(args['INPUT_MAP'])
 
 def replace_doodads(layer, mapping):
     progress = 0
@@ -37,20 +34,23 @@ def replace_doodads(layer, mapping):
 def get_mapping(image_name):
     mapping_path = f"./mappings/{image_name}.json"
     if os.path.isfile(mapping_path):
-        with open(mapping_path) as f:
+        with open(mapping_path, encoding='utf-8') as f:
             return json.load(f)
     return None
 
-for group in m.groups:
-    for layer in group.layers:
-        if layer.kind() != 'Tiles':
-            continue
-        img_name = m.images[layer.image].name
-        print(img_name)
-        mapping = get_mapping(img_name)
-        if mapping:
-            print(f"found {img_name} layer '{layer.name}'")
-            replace_doodads(layer, mapping['mappings'])
+def main():
+    m = twmap.Map(args['INPUT_MAP'])
+    for group in m.groups:
+        for layer in group.layers:
+            if layer.kind() != 'Tiles':
+                continue
+            img_name = m.images[layer.image].name
+            print(img_name)
+            mapping = get_mapping(img_name)
+            if mapping:
+                print(f"found {img_name} layer '{layer.name}'")
+                replace_doodads(layer, mapping['mappings'])
 
-m.save(args['OUTPUT_MAP'])
+    m.save(args['OUTPUT_MAP'])
 
+main()

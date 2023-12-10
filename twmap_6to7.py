@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 import os.path
+import sys
 import json
 import argparse
 
@@ -14,10 +15,16 @@ all_args = argparse.ArgumentParser(
                                  epilog=EXAMPLE_TEXT,
                                  formatter_class=argparse.RawDescriptionHelpFormatter)
 all_args.add_argument('-v', '--verbose',  help='verbose output')
+all_args.add_argument('-s', '--strict',  help='fail instead of best effort translation on edge case doodads')
 all_args.add_argument('INPUT_MAP')
 all_args.add_argument('OUTPUT_MAP')
 
 args = vars(all_args.parse_args())
+
+def dbg(msg):
+    if not args['verbose']:
+        return
+    print(msg)
 
 def replace_doodads(layer, mapping):
     progress = 0
@@ -28,11 +35,17 @@ def replace_doodads(layer, mapping):
             print(x, y)
         if flags == 0:
             if str(tile) in mapping:
+                warn = f"{tile}_warn"
+                if warn in mapping:
+                    print(f"Warning: {mapping[warn]}")
+                    if args['strict']:
+                        print('abort on warning because strict mode is active')
+                        sys.exit(1)
                 edited_tiles[y][x][flags] = mapping[str(tile)]
     layer.tiles = edited_tiles
 
-def get_mapping(image_name):
-    mapping_path = f"./mappings/{image_name}.json"
+def get_mapping(image_name, direction):
+    mapping_path = f"./mappings/{direction}_{image_name}.json"
     if os.path.isfile(mapping_path):
         with open(mapping_path, encoding='utf-8') as f:
             return json.load(f)
@@ -45,10 +58,10 @@ def main():
             if layer.kind() != 'Tiles':
                 continue
             img_name = m.images[layer.image].name
-            print(img_name)
-            mapping = get_mapping(img_name)
+            dbg(img_name)
+            mapping = get_mapping(img_name, '6to7')
             if mapping:
-                print(f"found {img_name} layer '{layer.name}'")
+                print(f"translating {img_name} layer '{layer.name}'")
                 replace_doodads(layer, mapping['mappings'])
 
     m.save(args['OUTPUT_MAP'])

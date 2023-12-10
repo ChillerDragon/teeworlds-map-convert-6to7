@@ -29,5 +29,12 @@ do
 			echo "$expected" > "$mapping"
 		fi
 	fi
+	invalid_keys="$(jq -r '.mappings | keys[]' "$mapping" | grep -nvE '^[0-9]+(_warn)?')"
+	if [ "$invalid_keys" != "" ]
+	then
+		err "Error: invalid mapping keys used in $mapping"
+		echo "$invalid_keys" | awk "{ print \"[-]        $mapping:\" \$0 }"
+		exit 1
+	fi
 done
 

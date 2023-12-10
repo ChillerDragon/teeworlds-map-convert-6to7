@@ -3,6 +3,8 @@ python script using twmap to move doodads from 0.6 positions to 0.7 positions
 
 ## quickstart
 
+You need python 3.9 or later
+
 ```
 git clone git@github.com:ChillerDragon/teeworlds-map-convert-6to7
 cd teeworlds-map-convert-6to7

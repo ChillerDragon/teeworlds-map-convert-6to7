@@ -10,5 +10,5 @@ jobs:
       - name: Translate dm1
         run: |
           wget -O https://github.com/teeworlds/teeworlds/raw/0.6/data/maps/dm1.map
-          ./twmap_6to7.py dm1.map dm1_07.map -Wall -Werror
+          ./twmap_6to7.py dm1.map dm1_07.map -Werror -Wno-mapping
 

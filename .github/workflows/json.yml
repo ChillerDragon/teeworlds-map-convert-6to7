@@ -1,0 +1,15 @@
+name: Check json
+on: [push]
+jobs:
+  check:
+    name: Check
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v4
+      - name: Prep linux
+        run: sudo apt-get update -y && sudo apt-get install jq -y
+      - name: Check json style
+        run: |
+          ./scripts/fix_style.sh --dry-run
+

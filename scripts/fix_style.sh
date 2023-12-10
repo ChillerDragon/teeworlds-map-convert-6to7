@@ -23,6 +23,7 @@ do
 		if [ "$arg_dry" == "1" ]
 		then
 			err "Error: wrong json style '$mapping'"
+			err "       please run $(tput bold)./scripts/fix_style.sh$(tput sgr0) to fix it"
 			exit 1
 		else
 			echo "$expected" > "$mapping"

@@ -427,7 +427,8 @@ disable=raw-checker-failed,
 	missing-module-docstring,
 	missing-function-docstring,
 	fixme,
-        use-symbolic-message-instead
+        use-symbolic-message-instead,
+	line-too-long
 
 # Enable the message, report, category or checker with the given id(s). You can
 # either give multiple identifier separated by comma (,) or put this option

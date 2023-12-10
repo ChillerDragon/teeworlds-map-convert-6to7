@@ -42,17 +42,17 @@ def warn(warn_type: str, msg: str) -> None:
         print('Error on waring because -Werror is on')
         sys.exit(1)
 
-def is_warn(warn: str) -> bool:
+def is_warn(warn_type: str) -> bool:
     if args['Weverything']:
         return True
     if args['Wall']:
-        if warn != 'Wempty':
+        if warn_type != 'Wempty':
             return True
-    off = f"Wno-{warn[1:]}"
+    off = f"Wno-{warn_type[1:]}"
     if off in args:
         if args[off]:
             return False
-    return args[warn]
+    return args[warn_type]
 
 def replace_doodads(layer, mapping: dict) -> None:
     progress = 0

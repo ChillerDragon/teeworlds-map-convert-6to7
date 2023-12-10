@@ -48,7 +48,7 @@ def is_warn(warn_type: str) -> bool:
     if args['Wall']:
         if warn_type != 'Wempty':
             return True
-    off = f"Wno-{warn_type[1:]}"
+    off = f"Wno_{warn_type[1:]}"
     if off in args:
         if args[off]:
             return False

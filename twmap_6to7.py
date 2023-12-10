@@ -69,7 +69,7 @@ def replace_doodads(layer, mapping: dict) -> None:
         if str(tile) in mapping:
             warn_key = f"{tile}_warn"
             if warn_key in mapping:
-                warn('Wmapping', mapping[warn])
+                warn('Wmapping', mapping[warn_key])
             mapped = mapping[str(tile)]
             if mapped == 0:
                 warn('Wempty', f"Empty tile used at x={x} y={y}")

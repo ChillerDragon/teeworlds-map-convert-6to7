@@ -16,7 +16,7 @@ pip install -r requirements.txt
 
 The tileset grass_dooads and some others got reordered in the update from 0.6 to 0.7
 To properly load maps made in 0.6 in 0.7 clients ddnet came up with the [map_convert_07](https://github.com/ddnet/ddnet/blob/master/src/tools/map_convert_07.cpp) tool
-which works by embedding all tiles which enforces the 0.6 look but also embeds standard tiles which increases the map size and does not allow texture packs anymore.
+which works by embedding all tiles which enforces the 0.6 look but also embeds standard tiles which increases the map size and breaks custom mapres setups (texture packs).
 
 
 So this tool does not emebed the tiles but moves the doodads around so they can be loaded as non embedded native 0.7 mapres and they look the same.

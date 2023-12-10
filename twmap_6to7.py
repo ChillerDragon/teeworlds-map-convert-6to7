@@ -19,6 +19,7 @@ all_args.add_argument('-v', '--verbose',  help='verbose output', action = 'store
 all_args.add_argument('-s', '--strict',  help='fail instead of best effort translation on edge case doodads', action = 'store_true')
 all_args.add_argument('-Werror', '--Werror',  help='abort with error on warning', action = 'store_true')
 all_args.add_argument('-Wempty', '--Wempty',  help='warn if empty tiles are used', action = 'store_true')
+all_args.add_argument('-Wunknown', '--Wunknown',  help='warn if tile index is not in the mapping', action = 'store_true', default = True)
 all_args.add_argument('-Wmapping', '--Wmapping',  help='show warnings for problematic tiles from the mappings file', action = 'store_true', default = True)
 all_args.add_argument('-Wno-mapping', '--Wno-mapping',  help='turn off -Wmapping', action = 'store_true')
 all_args.add_argument('-Weverything', '--Weverything',  help='turn every warning on', action = 'store_true')
@@ -60,15 +61,21 @@ def replace_doodads(layer, mapping: dict) -> None:
         progress += 1
         if progress % 100 == 0:
             print(x, y)
-        if flags == 0:
-            if str(tile) in mapping:
-                warn_key = f"{tile}_warn"
-                if warn_key in mapping:
-                    warn('Wmapping', mapping[warn])
-                mapped = mapping[str(tile)]
-                if mapped == 0:
-                    warn('Wempty', f"Empty tile used at x={x} y={y}")
-                edited_tiles[y][x][flags] = mapped
+        if tile == 0:
+            continue
+        if flags != 0:
+            continue
+
+        if str(tile) in mapping:
+            warn_key = f"{tile}_warn"
+            if warn_key in mapping:
+                warn('Wmapping', mapping[warn])
+            mapped = mapping[str(tile)]
+            if mapped == 0:
+                warn('Wempty', f"Empty tile used at x={x} y={y}")
+            edited_tiles[y][x][flags] = mapped
+        else:
+            warn('Wunknown', f"Tile with index {tile} at x={x} y={y} is not in the mapping")
     layer.tiles = edited_tiles
 
 def get_mapping(image_name, direction) -> Optional[dict]:

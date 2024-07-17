@@ -30,6 +30,8 @@ all_args.add_argument('OUTPUT_MAP')
 
 args = vars(all_args.parse_args())
 
+SCRIPT_DIR = os.path.dirname(os.path.realpath(__file__))
+
 def dbg(msg: str) -> None:
     if not args['verbose']:
         return
@@ -84,7 +86,7 @@ def replace_doodads(layer, mapping: dict) -> None:
     layer.tiles = edited_tiles
 
 def get_mapping(image_name, direction) -> Optional[dict]:
-    mapping_path = f"./mappings/{direction}_{image_name}.json"
+    mapping_path = os.path.join(SCRIPT_DIR, "mappings", f"{direction}_{image_name}.json")
     if os.path.isfile(mapping_path):
         with open(mapping_path, encoding='utf-8') as f:
             return json.load(f)

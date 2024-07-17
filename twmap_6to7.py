@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 import os.path
 import sys
@@ -24,6 +24,7 @@ all_args.add_argument('-Wmapping', '--Wmapping',  help='show warnings for proble
 all_args.add_argument('-Wno-mapping', '--Wno-mapping',  help='turn off -Wmapping', action = 'store_true')
 all_args.add_argument('-Weverything', '--Weverything',  help='turn every warning on', action = 'store_true')
 all_args.add_argument('-Wall', '--Wall',  help='turn all sensible warnings on', action = 'store_true')
+all_args.add_argument('-d', '--direction', help='translation direction either 7to6 or 6to7 (default)', default = '6to7')
 all_args.add_argument('INPUT_MAP')
 all_args.add_argument('OUTPUT_MAP')
 
@@ -67,9 +68,13 @@ def replace_doodads(layer, mapping: dict) -> None:
             continue
 
         if str(tile) in mapping:
-            warn_key = f"{tile}_warn"
+            warn_key = f"{tile}_warning"
             if warn_key in mapping:
                 warn('Wmapping', mapping[warn_key])
+            error_key = f"{tile}_error"
+            if error_key in mapping:
+                print(f"Error: {mapping[error_key]}")
+                sys.exit(1)
             mapped = mapping[str(tile)]
             if mapped == 0:
                 warn('Wempty', f"Empty tile used at x={x} y={y}")
@@ -88,6 +93,9 @@ def get_mapping(image_name, direction) -> Optional[dict]:
 def main() -> None:
     if args['Werror']:
         print('All warnings will be errors')
+    if not args['direction'] in ('6to7', '7to6'):
+        print(f"invalid direction '{args['direction']}' valid options are 6to7 and 7to6")
+        sys.exit(1)
     dbg(f"translating map {args['INPUT_MAP']}")
     m = twmap.Map(args['INPUT_MAP'])
     for group in m.groups:
@@ -96,7 +104,7 @@ def main() -> None:
                 continue
             img_name = m.images[layer.image].name
             dbg(img_name)
-            mapping = get_mapping(img_name, '6to7')
+            mapping = get_mapping(img_name, args['direction'])
             if mapping:
                 print(f"translating {img_name} layer '{layer.name}'")
                 replace_doodads(layer, mapping['mappings'])

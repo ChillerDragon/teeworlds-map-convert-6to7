@@ -104,6 +104,12 @@ def main() -> None:
         for layer in group.layers:
             if layer.kind() != 'Tiles':
                 continue
+            if layer.image is None:
+                dbg("skipping layer without image")
+                continue
+            if m.images[layer.image].is_embedded():
+                dbg("skipping embedded layer")
+                continue
             img_name = m.images[layer.image].name
             dbg(img_name)
             mapping = get_mapping(img_name, args['direction'])

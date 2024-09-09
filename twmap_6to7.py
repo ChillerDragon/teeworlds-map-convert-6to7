@@ -33,6 +33,11 @@ args = vars(all_args.parse_args())
 
 SCRIPT_DIR = os.path.dirname(os.path.realpath(__file__))
 
+TILE_FLAG_FLIP_X = 0b0001
+TILE_FLAG_FLIP_Y = 0b0010
+TILE_FLAG_OPAQUE = 0b0100
+TILE_FLAG_ROTATE = 0b1000
+
 def dbg(msg: str) -> None:
     if not args['verbose']:
         return
@@ -58,9 +63,53 @@ def is_warn(warn_type: str) -> bool:
             return False
     return args[warn_type]
 
+def callback_dirt_corner(edited_tiles: numpy.ndarray, layer, tile: int, flags: int, x: int, y: int) -> None:
+    print(f"[py][dirt_corner] got special dirt corner at x={x} y={y} editing surrounding tiles")
+
+    # this will crash if the map has corner tiles on the border of the map
+    # but thats a graphic bug anyways so yolo
+
+    tile_left = layer.tiles[y][x - 1][0]
+    if tile_left:
+        print(f"[py][dirt_corner]   index left={tile_left}")
+        # grass top
+        if tile_left == 16:
+            # grass top fade to dirt
+            edited_tiles[y][x - 1][0] = 22
+            # rotate so it aligns with the corner
+            edited_tiles[y][x - 1][1] = TILE_FLAG_ROTATE
+
+            # set the corner
+            edited_tiles[y][x][0] = 54
+            edited_tiles[y][x][1] = TILE_FLAG_ROTATE | TILE_FLAG_FLIP_X
+            return
+    tile_right = layer.tiles[y][x + 1][0]
+    if tile_right:
+        print(f"[py][dirt_corner]   index right={tile_right}")
+        # grass top
+        if tile_right == 16:
+            # grass top fade to dirt
+            edited_tiles[y][x + 1][0] = 38
+            # rotate so it aligns with the corner
+            edited_tiles[y][x + 1][1] = TILE_FLAG_ROTATE | TILE_FLAG_FLIP_X | TILE_FLAG_FLIP_Y
+
+            # set the corner
+            edited_tiles[y][x][0] = 54
+            edited_tiles[y][x][1] = TILE_FLAG_ROTATE | TILE_FLAG_FLIP_X | TILE_FLAG_FLIP_Y
+            return
+
+    print(f"[py][dirt_corner]   Warning: no matching surrounding tile found to adapt the corner to")
+
+def call_py_func(edited_tiles: numpy.ndarray, layer, tile: int, flags: int, x: int, y: int, funcname: str) -> None:
+    if funcname == 'dirt_corner':
+        callback_dirt_corner(edited_tiles, layer, tile, flags, x, y)
+    else:
+        print(f"Error: tried to call unknown python function '{funcname}'")
+        exit(1)
+
 def replace_doodads(layer, mapping: dict) -> None:
     progress = 0
-    edited_tiles = layer.tiles
+    edited_tiles: numpy.ndarray = layer.tiles
     for (y, x, flags), tile in numpy.ndenumerate(layer.tiles):
         progress += 1
         if progress % 100 == 0:
@@ -71,6 +120,9 @@ def replace_doodads(layer, mapping: dict) -> None:
             continue
 
         if str(tile) in mapping:
+            py_func_key = f"{tile}_py"
+            if py_func_key in mapping:
+                call_py_func(edited_tiles, layer, tile, flags, x, y, mapping[py_func_key])
             warn_key = f"{tile}_warning"
             if warn_key in mapping:
                 warn('Wmapping', mapping[warn_key])

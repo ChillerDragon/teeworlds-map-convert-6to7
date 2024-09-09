@@ -2,6 +2,10 @@
   "name": "grass_doodads",
   "direction": "7 (key) to 6 (value)",
   "mappings": {
+    "131": 53,
+    "131_py": "dirt_corner",
+    "132": 53,
+    "132_py": "dirt_corner",
     "166": 1,
     "166_error": "166 is a 0.7 only grass main tile and can not be translated to 0.6",
     "83": 66,

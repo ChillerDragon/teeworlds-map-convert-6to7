@@ -1,0 +1,18 @@
+{
+  "name": "grass_doodads",
+  "direction": "7 (key) to 6 (value)",
+  "mappings": {
+    "166": 1,
+    "166_error": "166 is a 0.7 only grass main tile and can not be translated to 0.6",
+    "83": 66,
+    "83_warning": "grass main index 83 will look a bit different in 0.6 (broken bone becomes non broken bone)",
+    "69": 64,
+    "69_warning": "grass main index 69 will look a bit different in 0.6 (translating owl skeleton as tee skeleton)",
+    "70": 65,
+    "70_warning": "grass main index 70 will look a bit different in 0.6 (translating owl skeleton as tee skeleton)",
+    "85": 80,
+    "85_warning": "grass main index 85 will look a bit different in 0.6 (translating owl skeleton as tee skeleton)",
+    "86": 81,
+    "86_warning": "grass main index 86 will look a bit different in 0.6 (translating owl skeleton as tee skeleton)"
+  }
+}

@@ -22,6 +22,7 @@ all_args.add_argument('-Wempty', '--Wempty',  help='warn if empty tiles are used
 all_args.add_argument('-Wunknown', '--Wunknown',  help='warn if tile index is not in the mapping', action = 'store_true', default = True)
 all_args.add_argument('-Wmapping', '--Wmapping',  help='show warnings for problematic tiles from the mappings file', action = 'store_true', default = True)
 all_args.add_argument('-Wno-mapping', '--Wno-mapping',  help='turn off -Wmapping', action = 'store_true')
+all_args.add_argument('-Wno-error', '--Wno-error',  help='ignore errors', action = 'store_true')
 all_args.add_argument('-Weverything', '--Weverything',  help='turn every warning on', action = 'store_true')
 all_args.add_argument('-Wall', '--Wall',  help='turn all sensible warnings on', action = 'store_true')
 all_args.add_argument('-d', '--direction', help='translation direction either 7to6 or 6to7 (default)', default = '6to7')
@@ -75,8 +76,12 @@ def replace_doodads(layer, mapping: dict) -> None:
                 warn('Wmapping', mapping[warn_key])
             error_key = f"{tile}_error"
             if error_key in mapping:
+                print(f"Got error on tile with index {tile} at x={x} y={y}")
                 print(f"Error: {mapping[error_key]}")
-                sys.exit(1)
+                if args['Wno_error']:
+                    print('Ignoring error [-Wno-error]')
+                else:
+                    sys.exit(1)
             mapped = mapping[str(tile)]
             if mapped == 0:
                 warn('Wempty', f"Empty tile used at x={x} y={y}")

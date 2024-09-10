@@ -183,6 +183,10 @@ good-names=i,
            j,
            k,
            ex,
+           x,
+           y,
+           f,
+           m,
            Run,
            _
 
@@ -421,14 +425,15 @@ disable=raw-checker-failed,
         suppressed-message,
         useless-suppression,
         deprecated-pragma,
-	too-few-public-methods,
-	trailing-newlines,
-	missing-class-docstring,
-	missing-module-docstring,
-	missing-function-docstring,
-	fixme,
+        too-few-public-methods,
+        trailing-newlines,
+        missing-class-docstring,
+        missing-module-docstring,
+        missing-function-docstring,
+        fixme,
         use-symbolic-message-instead,
-	line-too-long
+        line-too-long,
+        too-many-arguments
 
 # Enable the message, report, category or checker with the given id(s). You can
 # either give multiple identifier separated by comma (,) or put this option
@@ -629,4 +634,3 @@ init-import=no
 # List of qualified module names which can have objects that can redefine
 # builtins.
 redefining-builtins-modules=six.moves,past.builtins,future.builtins,builtins,io
-

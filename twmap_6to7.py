@@ -63,8 +63,16 @@ def is_warn(warn_type: str) -> bool:
             return False
     return args[warn_type]
 
-def callback_dirt_corner(edited_tiles: numpy.ndarray, layer, tile: int, flags: int, x: int, y: int) -> None:
-    print(f"[py][dirt_corner] got special dirt corner at x={x} y={y} editing surrounding tiles")
+def callback_dirt_corner(
+        edited_tiles: numpy.ndarray,
+        layer,
+        tile: int,
+        flags: int,
+        x: int,
+        y: int) -> None:
+    print(
+        f"[py][dirt_corner] got special dirt corner at" \
+        f" x={x} y={y} tile={tile} flags={flags} editing surrounding tiles")
 
     # this will crash if the map has corner tiles on the border of the map
     # but thats a graphic bug anyways so yolo
@@ -98,14 +106,14 @@ def callback_dirt_corner(edited_tiles: numpy.ndarray, layer, tile: int, flags: i
             edited_tiles[y][x][1] = TILE_FLAG_ROTATE | TILE_FLAG_FLIP_X | TILE_FLAG_FLIP_Y
             return
 
-    print(f"[py][dirt_corner]   Warning: no matching surrounding tile found to adapt the corner to")
+    print("[py][dirt_corner]   Warning: no matching surrounding tile found to adapt the corner to")
 
 def call_py_func(edited_tiles: numpy.ndarray, layer, tile: int, flags: int, x: int, y: int, funcname: str) -> None:
     if funcname == 'dirt_corner':
         callback_dirt_corner(edited_tiles, layer, tile, flags, x, y)
     else:
         print(f"Error: tried to call unknown python function '{funcname}'")
-        exit(1)
+        sys.exit(1)
 
 def replace_doodads(layer, mapping: dict) -> None:
     progress = 0

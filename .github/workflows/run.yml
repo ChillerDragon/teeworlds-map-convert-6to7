@@ -1,4 +1,5 @@
 name: Test run
+on: [push]
 jobs:
   dm1:
     runs-on: ubuntu-latest
